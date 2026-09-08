@@ -48,6 +48,7 @@ def get_config() -> Config:
 SUPPORTED_FORMATS: dict[str, tuple[str, str]] = {
     ".pdf":  ("pdf_parser",         "text"),
     ".txt":  ("pdf_parser",         "text"),
+    ".md":  ("markdown_parser",         "text"),
     ".xlsx": ("excel_parser",       "tabular"),
     ".xls":  ("excel_parser",       "tabular"),
     ".csv":  ("csv_parser",         "tabular"),
