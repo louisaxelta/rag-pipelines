@@ -1,0 +1,79 @@
+[project]
+name = "rag-pipelines"
+version = "0.1.0"
+description = "RAG pipeline for document ingestion and vector store operations"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [
+    { name = "Louis Axel", email = "louisaxel.tjokroatmodjo@gmail.com" },
+]
+keywords = ["rag", "vector-database", "embeddings", "document-ingestion", "llm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "pydantic>=2.13",
+    "pydantic-settings>=2.14",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+aws = [
+    "boto3>=1.40",
+    "botocore>=1.40",
+]
+server = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "python-multipart>=0.0.12",
+    "httpx>=0.28",
+]
+parsers = [
+    "pymupdf>=1.25",
+    "pdfplumber>=0.11",
+    "openpyxl>=3.1",
+    "pandas>=2.2",
+    "python-docx>=1.1",
+    "python-pptx>=1.0",
+]
+observability = [
+    "langfuse>=4.7",
+]
+all = [
+    "boto3>=1.40",
+    "botocore>=1.40",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "python-multipart>=0.0.12",
+    "httpx>=0.28",
+    "pymupdf>=1.25",
+    "pdfplumber>=0.11",
+    "openpyxl>=3.1",
+    "pandas>=2.2",
+    "python-docx>=1.1",
+    "python-pptx>=1.0",
+    "langfuse>=4.7",
+]
+
+[project.scripts]
+rag-pipelines = "rag_pipelines.app.main:run"
+
+[project.urls]
+Homepage = "https://github.com/louisaxelta/rag-pipelines"
+Repository = "https://github.com/louisaxelta/rag-pipelines"
+Issues = "https://github.com/louisaxelta/rag-pipelines/issues"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
