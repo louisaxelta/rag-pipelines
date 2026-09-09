@@ -17,10 +17,10 @@ class Config(BaseSettings):
 
     # LLM Models
     # OpenRouter
-    OPENROUTER_API_KEY: Optional[str] = None
+    OPENROUTER_API_KEY: str | None = None
     OPENROUTER_API_URL: str = "https://openrouter.ai/api/v1"
-    OPENROUTER_EMBEDDING_MODEL: Optional[str] = None
-    OPENROUTER_LLM_MODEL: Optional[str] = None
+    OPENROUTER_EMBEDDING_MODEL: str | None = None
+    OPENROUTER_LLM_MODEL: str | None = None
 
     # AWS Bedrock
     BEDROCK_REGION: str = "us-west-2"
