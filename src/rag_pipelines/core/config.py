@@ -12,8 +12,17 @@ class Config(BaseSettings):
     AWS_REGION: str = "us-west-2"
     AWS_ROLE_ARN: str = ""
     USE_ASSUME_ROLE: bool = False
+    MODEL_TEMPERATURE: float = 0.1
+    MODEL_MAX_TOKENS: int = 16384
 
-    # Bedrock
+    # LLM Models
+    # OpenRouter
+    OPENROUTER_API_KEY: Optional[str] = None
+    OPENROUTER_API_URL: str = "https://openrouter.ai/api/v1"
+    OPENROUTER_EMBEDDING_MODEL: Optional[str] = None
+    OPENROUTER_LLM_MODEL: Optional[str] = None
+
+    # AWS Bedrock
     BEDROCK_REGION: str = "us-west-2"
     EMBEDDING_MODEL: str = "amazon.titan-embed-text-v2:0"
     EMBEDDING_DIMENSIONS: int = 512
