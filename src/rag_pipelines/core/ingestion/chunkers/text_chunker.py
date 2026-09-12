@@ -1,4 +1,7 @@
 import re
+from rag_pipelines.core.llm.client import invoke_structured
+from rag_pipelines.core.llm.schemas import SemanticChunkGroups
+from rag_pipelines.core.logging import logger
 from rag_pipelines.core.models import ParsedChunk
 from rag_pipelines.core.ingestion.chunkers.base import BaseChunker
 
@@ -71,17 +74,48 @@ class TextChunker(BaseChunker):
         return self._fixed(text)
 
     def _semantic(self, text: str) -> list[str]:
-        # split by sentence boundaries, then group up to chunk_size
         sentences = re.split(r"(?<=[.!?])\s+", text)
-        chunks = []
-        current = ""
-        for sentence in sentences:
-            if len(current) + len(sentence) <= self.config.chunk_size:
-                current += " " + sentence
-            else:
-                if current:
-                    chunks.append(current.strip())
-                current = sentence
-        if current:
-            chunks.append(current.strip())
-        return chunks
+        sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
+        logger.info(
+            "[SemanticChunker] sentences=%s chunk_size=%s",
+            len(sentences),
+            self.config.chunk_size,
+        )
+
+        numbered_sentences = "\n".join(
+            f"[{index}] {sentence}"
+            for index, sentence in enumerate(sentences)
+        )
+
+        prompt = f"""Group these sentences into semantically related chunks.
+Keep sentence order and aim for at most {self.config.chunk_size} characters per group.
+Return every sentence index exactly once.
+
+{numbered_sentences}
+"""
+        result = invoke_structured(
+            prompt,
+            SemanticChunkGroups,
+            max_tokens=16384,
+        )
+
+        logger.info("[SemanticChunker] groups=%s", len(result.groups))
+        logger.debug("[SemanticChunker] result=%s", result.model_dump())
+
+        invalid_indices = [
+            index
+            for group in result.groups
+            for index in group.indices
+            if not 0 <= index < len(sentences)
+        ]
+        if invalid_indices:
+            logger.error(
+                "[SemanticChunker] invalid_indices=%s valid_range=0-%s",
+                invalid_indices,
+                len(sentences) - 1,
+            )
+
+        return [
+            " ".join(sentences[index] for index in group.indices)
+            for group in result.groups
+        ]

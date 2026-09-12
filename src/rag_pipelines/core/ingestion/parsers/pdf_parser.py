@@ -10,7 +10,11 @@ class PdfParser(BaseParser):
         chunks = []
         with pdfplumber.open(file_stream) as pdf:
             for i, page in enumerate(pdf.pages, start=1):
-                text = page.extract_text() or ""
+                text = page.extract_text(
+                    x_tolerance=1,
+                    y_tolerance=3,
+                    ) or ""
+
                 if text.strip():
                     chunks.append(ParsedChunk(
                         content={"text": text.strip()},
